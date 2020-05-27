@@ -6,6 +6,8 @@ sudoku puzzle with a unique solution.
 * [User Interface](#user-interface)
 * [Inputs and Outputs](#inputs-and-outputs)
 * [Decomposition into Modules](#decomposition-into-modules)
+* [Pseudocode](#pseudocode)
+* [Data Structures](#data-structures)
 
 ## User Interface
 
@@ -57,8 +59,54 @@ puzzle (format described in [user interface](#user-interface))
     * `check_consistency` function that checks whether the value in a given
     field is allowed
 
+## Pseudocode
 
+The main module will follow these steps
 
+1. Execute from command line as shown in the user interface
+2. Parse the command line arguments
+3. Check the argument for mode
+    1. If mode is `create`, initialize the `creator` module
+    2. If mode is `solve`, process standard input and initialize
+    `solver` module
+4. Print the output returned by the relevant module
 
+#### Solver
 
+The solver will follow these steps:
 
+1. The solver takes an array of integers representing the unsolved grid
+2. While there is a field with 0:
+    1. Try filling in a number
+    2. Check for consistency
+    3. If not consistent, try different number
+        1. If all numbers are exhausted, go back to previous field using recursion
+    4. If consistent, look for another field with 0
+    5. If all fields are filled, copy the solution into solution array
+        1. If solution array already contains a solution, return false to indicate
+        solution is not unique
+3. If solution is found and false wasn't returned, return true
+
+#### Creator
+
+The creator will follow these steps:
+
+1. Initialize new array for the grid
+2. While there are unfilled fields
+    1. Choose a random integer from 1 to 9 that hasn't been tried yet
+    2. Check for consistency
+    3. If not consistent, mod by 9 and increment by 1
+    4. If consistent, go to next empty field (by recursion)
+3. Once the grid is filled, remove value of N fields as follows
+    1. Choose random field
+    2. Replace with zero
+    3. Call solver and see if the puzzle has a unique solution
+    4. If there is a unique solution, find next field to empty
+    5. If there is not a unique solution, put value back and
+    choose different field to empty
+4. Return a grid for valid sudoku puzzle
+
+## Data Structures
+
+We don't expect need for any data structures beyond the integer array
+representing the sudoku grid.
